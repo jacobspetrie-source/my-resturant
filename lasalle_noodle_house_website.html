@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Noto+Serif+JP:wght@300;400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DM Sans', sans-serif; background: #0a0a0a; color: #f0ede6; overflow-x: hidden; }
+
+  /* NAV */
+  nav { position: fixed; top: 0; width: 100%; z-index: 100; padding: 1.2rem 3rem; display: flex; justify-content: space-between; align-items: center; background: rgba(10,10,10,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(212,170,90,0.15); }
+  .nav-logo { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: #d4aa5a; letter-spacing: 0.05em; }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a { color: #b8b0a0; text-decoration: none; font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase; transition: color 0.3s; }
+  .nav-links a:hover { color: #d4aa5a; }
+
+  /* HERO */
+  .hero { height: 100vh; position: relative; display: flex; align-items: center; justify-content: center; text-align: center; overflow: hidden; }
+  .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse at 60% 40%, #1a0f00 0%, #0a0a0a 70%); }
+  .hero-pattern { position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(212,170,90,0.03) 60px, rgba(212,170,90,0.03) 61px), repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(212,170,90,0.03) 60px, rgba(212,170,90,0.03) 61px); }
+  .hero-circle { position: absolute; width: 600px; height: 600px; border-radius: 50%; border: 1px solid rgba(212,170,90,0.08); top: 50%; left: 50%; transform: translate(-50%, -50%); }
+  .hero-circle2 { position: absolute; width: 400px; height: 400px; border-radius: 50%; border: 1px solid rgba(212,170,90,0.12); top: 50%; left: 50%; transform: translate(-50%, -50%); }
+  .hero-content { position: relative; z-index: 2; }
+  .hero-kanji { font-family: 'Noto Serif JP', serif; font-size: 0.75rem; letter-spacing: 0.5em; color: #d4aa5a; opacity: 0.7; margin-bottom: 1.5rem; display: block; }
+  .hero-title { font-family: 'Playfair Display', serif; font-size: clamp(3rem, 8vw, 6rem); line-height: 1.05; color: #f0ede6; margin-bottom: 0.5rem; }
+  .hero-title em { font-style: italic; color: #d4aa5a; }
+  .hero-sub { font-size: 0.75rem; letter-spacing: 0.4em; text-transform: uppercase; color: #8a7f6e; margin-top: 1rem; margin-bottom: 2.5rem; }
+  .hero-cta { display: inline-block; border: 1px solid #d4aa5a; color: #d4aa5a; padding: 0.9rem 2.5rem; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; transition: all 0.3s; cursor: pointer; }
+  .hero-cta:hover { background: #d4aa5a; color: #0a0a0a; }
+  .scroll-line { position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+  .scroll-line span { font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: #5a5040; }
+  .scroll-line-bar { width: 1px; height: 50px; background: linear-gradient(to bottom, #d4aa5a, transparent); animation: scrollbar 1.8s ease-in-out infinite; }
+  @keyframes scrollbar { 0%,100% { opacity: 0.3; transform: scaleY(1); } 50% { opacity: 1; transform: scaleY(0.6); } }
+
+  /* SECTIONS */
+  section { padding: 6rem 3rem; max-width: 1100px; margin: 0 auto; }
+  .section-label { font-size: 0.65rem; letter-spacing: 0.5em; text-transform: uppercase; color: #d4aa5a; margin-bottom: 1rem; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.1; color: #f0ede6; margin-bottom: 1.5rem; }
+  .divider { width: 60px; height: 1px; background: #d4aa5a; margin: 1.5rem 0; opacity: 0.5; }
+
+  /* MENU */
+  .menu-section { background: #0e0e0e; max-width: 100%; padding: 6rem 0; }
+  .menu-inner { max-width: 1100px; margin: 0 auto; padding: 0 3rem; }
+  .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1px; background: rgba(212,170,90,0.1); margin-top: 3rem; }
+  .dish-card { background: #0e0e0e; padding: 2rem; position: relative; transition: background 0.3s; }
+  .dish-card:hover { background: #141410; }
+  .dish-number { font-family: 'Playfair Display', serif; font-size: 3.5rem; color: rgba(212,170,90,0.08); position: absolute; top: 1rem; right: 1.5rem; line-height: 1; font-weight: 700; }
+  .dish-name { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: #f0ede6; margin-bottom: 0.5rem; }
+  .dish-desc { font-size: 0.82rem; color: #7a7060; line-height: 1.6; margin-bottom: 1.2rem; }
+  .dish-price { font-size: 1rem; color: #d4aa5a; font-weight: 500; }
+  .dish-tag { display: inline-block; font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; padding: 0.25rem 0.6rem; border: 1px solid rgba(212,170,90,0.3); color: #9a8a6a; margin-bottom: 1rem; }
+
+  /* GALLERY */
+  .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: auto; gap: 1px; background: rgba(212,170,90,0.1); margin-top: 3rem; }
+  .gallery-item { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 3rem; position: relative; overflow: hidden; }
+  .gallery-item:nth-child(1) { background: #1a1200; grid-column: span 2; aspect-ratio: 2/1; }
+  .gallery-item:nth-child(2) { background: #0f1a12; }
+  .gallery-item:nth-child(3) { background: #1a0e0a; }
+  .gallery-item:nth-child(4) { background: #0a1018; }
+  .gallery-item:nth-child(5) { background: #18120a; grid-column: span 2; aspect-ratio: 2/1; }
+  .gallery-label { position: absolute; bottom: 0; left: 0; right: 0; padding: 1rem; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); font-size: 0.75rem; color: #d4aa5a; letter-spacing: 0.1em; opacity: 0; transition: opacity 0.3s; }
+  .gallery-item:hover .gallery-label { opacity: 1; }
+  .dish-emoji { font-size: 3.5rem; }
+
+  /* ABOUT */
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; margin-top: 2rem; }
+  .about-text { font-size: 0.95rem; color: #8a8070; line-height: 1.9; }
+  .about-text p + p { margin-top: 1.2rem; }
+  .about-stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .about-stat { border: 1px solid rgba(212,170,90,0.15); padding: 1.5rem; }
+  .stat-number { font-family: 'Playfair Display', serif; font-size: 2.5rem; color: #d4aa5a; line-height: 1; }
+  .stat-label { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: #5a5040; margin-top: 0.3rem; }
+
+  /* FOOTER */
+  footer { border-top: 1px solid rgba(212,170,90,0.1); padding: 3rem; text-align: center; }
+  .footer-logo { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: #d4aa5a; margin-bottom: 0.5rem; }
+  .footer-sub { font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase; color: #3a3028; }
+  .footer-links { display: flex; justify-content: center; gap: 2rem; margin: 1.5rem 0; list-style: none; }
+  .footer-links a { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: #4a4030; text-decoration: none; transition: color 0.3s; }
+  .footer-links a:hover { color: #d4aa5a; }
+  .footer-copy { font-size: 0.65rem; color: #2a2018; margin-top: 1rem; }
+
+  /* ANIMATIONS */
+  .fade-in { opacity: 0; transform: translateY(20px); animation: fadeIn 0.8s ease forwards; }
+  @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+  .hero-content .hero-kanji { animation: fadeIn 0.8s 0.1s ease forwards; opacity: 0; }
+  .hero-content .hero-title { animation: fadeIn 0.8s 0.3s ease forwards; opacity: 0; }
+  .hero-content .hero-sub { animation: fadeIn 0.8s 0.5s ease forwards; opacity: 0; }
+  .hero-content .hero-cta { animation: fadeIn 0.8s 0.7s ease forwards; opacity: 0; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">[LASTNAME]'s Noodle House</div>
+  <ul class="nav-links">
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#about">About</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-pattern"></div>
+  <div class="hero-circle"></div>
+  <div class="hero-circle2"></div>
+  <div class="hero-content">
+    <span class="hero-kanji">ラーメン ・ 寿司 ・ 餃子</span>
+    <h1 class="hero-title">[LASTNAME]'s<br><em>Noodle House</em></h1>
+    <p class="hero-sub">Authentic Japanese — Est. 2018</p>
+    <a class="hero-cta" href="#menu">View our menu</a>
+  </div>
+  <div class="scroll-line">
+    <span>Scroll</span>
+    <div class="scroll-line-bar"></div>
+  </div>
+</div>
+
+<!-- MENU -->
+<div class="menu-section" id="menu">
+  <div class="menu-inner">
+    <p class="section-label">Our Menu</p>
+    <h2 class="section-title">Crafted with<br><em style="font-style:italic; color:#d4aa5a;">tradition</em></h2>
+    <div class="menu-grid">
+
+      <div class="dish-card">
+        <div class="dish-number">01</div>
+        <span class="dish-tag">Signature</span>
+        <div class="dish-name">Classic Tonkotsu Ramen</div>
+        <div class="dish-desc">Rich pork bone broth simmered 12 hours, topped with soft-boiled egg, bamboo shoots, nori, and chashu pork.</div>
+        <div class="dish-price">€12.90</div>
+      </div>
+
+      <div class="dish-card">
+        <div class="dish-number">02</div>
+        <span class="dish-tag">Spicy</span>
+        <div class="dish-name">Spicy Miso Ramen</div>
+        <div class="dish-desc">Bold miso broth with a chili kick, sweet corn, ground pork, bean sprouts, and a sheet of toasted nori.</div>
+        <div class="dish-price">€13.50</div>
+      </div>
+
+      <div class="dish-card">
+        <div class="dish-number">03</div>
+        <span class="dish-tag">Fresh Roll</span>
+        <div class="dish-name">Salmon Avocado Roll</div>
+        <div class="dish-desc">Fresh Atlantic salmon with creamy avocado and crisp cucumber, wrapped in perfectly seasoned sushi rice.</div>
+        <div class="dish-price">€10.90</div>
+      </div>
+
+      <div class="dish-card">
+        <div class="dish-number">04</div>
+        <span class="dish-tag">Chef's Pick</span>
+        <div class="dish-name">Dragon Roll (8 pcs)</div>
+        <div class="dish-desc">Crispy shrimp tempura inside, topped with thin slices of avocado and a drizzle of spicy mayo.</div>
+        <div class="dish-price">€14.50</div>
+      </div>
+
+      <div class="dish-card">
+        <div class="dish-number">05</div>
+        <span class="dish-tag">Starter</span>
+        <div class="dish-name">Gyoza (6 pcs)</div>
+        <div class="dish-desc">Pan-fried Japanese dumplings with a crispy golden base, filled with seasoned pork and cabbage. Served with ponzu dip.</div>
+        <div class="dish-price">€7.50</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- GALLERY -->
+<section id="gallery" style="max-width:100%; padding: 6rem 3rem;">
+  <div style="max-width:1100px; margin:0 auto;">
+    <p class="section-label">Gallery</p>
+    <h2 class="section-title">A feast for<br><em style="font-style:italic;color:#d4aa5a;">the eyes</em></h2>
+    <div class="gallery-grid">
+      <div class="gallery-item">
+        <span class="dish-emoji">🍜</span>
+        <div class="gallery-label">Tonkotsu Ramen</div>
+      </div>
+      <div class="gallery-item">
+        <span class="dish-emoji">🍣</span>
+        <div class="gallery-label">Salmon Roll</div>
+      </div>
+      <div class="gallery-item">
+        <span class="dish-emoji">🥟</span>
+        <div class="gallery-label">Gyoza</div>
+      </div>
+      <div class="gallery-item">
+        <span class="dish-emoji">🌶️</span>
+        <div class="gallery-label">Spicy Miso</div>
+      </div>
+      <div class="gallery-item">
+        <span class="dish-emoji">🐉</span>
+        <div class="gallery-label">Dragon Roll</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" style="border-top: 1px solid rgba(212,170,90,0.1);">
+  <p class="section-label">About Us</p>
+  <h2 class="section-title">Our story</h2>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>[LASTNAME]'s Noodle House was born from a simple dream: to bring the warmth of authentic Japanese street food to the heart of our city.</p>
+      <p>Founded in 2018, our recipes are inspired by years of travel through the back streets of Tokyo, Osaka, and Fukuoka. Every broth is slow-simmered for 12 hours. Every roll is crafted by hand, every morning.</p>
+      <p>We are not just a restaurant — we are a place to slow down, connect, and eat well. Welcome to the family.</p>
+    </div>
+    <div class="about-stat-grid">
+      <div class="about-stat">
+        <div class="stat-number">12h</div>
+        <div class="stat-label">Broth simmered</div>
+      </div>
+      <div class="about-stat">
+        <div class="stat-number">2018</div>
+        <div class="stat-label">Founded</div>
+      </div>
+      <div class="about-stat">
+        <div class="stat-number">5★</div>
+        <div class="stat-label">Guest rating</div>
+      </div>
+      <div class="about-stat">
+        <div class="stat-number">100%</div>
+        <div class="stat-label">Fresh daily</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">[LASTNAME]'s Noodle House</div>
+  <div class="footer-sub">Authentic Japanese cuisine</div>
+  <ul class="footer-links">
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#about">About</a></li>
+  </ul>
+  <div class="footer-copy">© 2026 [LASTNAME]'s Noodle House. All rights reserved.</div>
+</footer>
+
+</body>
+</html>
